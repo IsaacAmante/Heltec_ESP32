@@ -549,6 +549,7 @@ void LoRaClass::implicitHeaderMode()
 
 void LoRaClass::handleDio0Rise()
 {
+  detachInterrupt(digitalPinToInterrupt(_dio0));
   int irqFlags = readRegister(REG_IRQ_FLAGS);
   // clear IRQ's
   writeRegister(REG_IRQ_FLAGS, irqFlags);
@@ -562,6 +563,7 @@ void LoRaClass::handleDio0Rise()
     if (_onReceive) { _onReceive(packetLength); }
     // reset FIFO address
     writeRegister(REG_FIFO_ADDR_PTR, 0);
+    attachInterrupt(digitalPinToInterrupt(_dio0), LoRaClass::onDio0Rise, RISING);
   }
 }
 
